@@ -1,5 +1,6 @@
 package org.uninstal.contesttools.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatMessageType;
@@ -13,7 +14,7 @@ public class Messenger {
 		
 		if(lower.startsWith("title:") && lower.contains("subtitle:")) {
 			
-			int index = message.indexOf("subtitle:");
+			int index = lower.indexOf("subtitle:");
 			String title = message.substring(6, index);
 			String subtitle = message.substring(index + 9);
 			
@@ -31,5 +32,15 @@ public class Messenger {
 		
 		player.sendMessage(message);
 		return;
+	}
+	
+	public static void announce(String message) {
+		
+		for(Player player : Bukkit.getOnlinePlayers())
+			send(player, message);
+	}
+	
+	public static void console(String message) {
+		Bukkit.getConsoleSender().sendMessage(message.replace("&", "§"));
 	}
 }

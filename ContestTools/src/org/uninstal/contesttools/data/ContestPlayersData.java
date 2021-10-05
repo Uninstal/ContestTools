@@ -2,6 +2,7 @@ package org.uninstal.contesttools.data;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
 
@@ -23,6 +24,20 @@ public class ContestPlayersData {
 	
 	public void reward(Player player, int value) {
 		put(player.getName(), value);
+	}
+	
+	public String getFirstPlace() {
+		String player = new String();
+		
+		int temp = 0;
+		for(Entry<String, Integer> set : players.entrySet()) {
+			if(set.getValue() > temp) {
+				temp = set.getValue();
+				player = set.getKey();
+			}
+		}
+		
+		return player;
 	}
 	
 	public Map<String, Integer> get() {

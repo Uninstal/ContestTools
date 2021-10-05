@@ -13,9 +13,11 @@ public class TypeMineBlocks extends ContestOptions {
 	private Set<Material> blocks;
 	private Map<Material, Integer> scores;
 
-	public TypeMineBlocks(Map<Material, Integer> scores) {
+	public TypeMineBlocks(String id, String name, 
+			String description, int duration, 
+			Map<Material, Integer> scores) {
 		
-		super(ContestType.MINE_BLOCKS);
+		super(id, name, description, ContestType.MINE_BLOCKS, duration);
 		this.blocks = scores.keySet();
 		this.scores = scores;
 	}

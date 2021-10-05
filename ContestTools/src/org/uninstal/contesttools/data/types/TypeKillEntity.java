@@ -13,8 +13,11 @@ public class TypeKillEntity extends ContestOptions {
 	private Set<EntityType> entities;
 	private Map<EntityType, Integer> scores;
 
-	public TypeKillEntity(Map<EntityType, Integer> scores) {
-		super(ContestType.KILL_ENTITY);
+	public TypeKillEntity(String id, String name, 
+			String description, int duration, 
+			Map<EntityType, Integer> scores) {
+		
+		super(id, name, description, ContestType.KILL_ENTITY, duration);
 		this.entities = scores.keySet();
 		this.scores = scores;
 	}

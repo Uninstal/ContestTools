@@ -1,6 +1,9 @@
 package org.uninstal.contesttools.util;
 
+import java.util.Map;
+
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.uninstal.contesttools.data.ContestOptions;
 
 public class Values {
 	
@@ -14,4 +17,9 @@ public class Values {
 		
 		
 	}
+	
+	public static Map<String, ContestOptions> CONTESTS;
+	
+	public static String COMMAND_HELP;
+	public static String CONTEST_START;
 }
