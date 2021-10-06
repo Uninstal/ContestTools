@@ -17,7 +17,7 @@ public class Handler implements Listener {
 	public void onBlockBreak(BlockBreakEvent e) {
 		
 		if(Contest.isRunning()) {
-			ContestOptions options = Contest.getCurrentContest();
+			ContestOptions options = Contest.getOptions();
 			
 			if(options.getType() == ContestType.MINE_BLOCKS) {
 				
@@ -38,7 +38,7 @@ public class Handler implements Listener {
 	public void onEntityKill(EntityDeathEvent e) {
 		
 		if(Contest.isRunning()) {
-			ContestOptions options = Contest.getCurrentContest();
+			ContestOptions options = Contest.getOptions();
 			
 			if(options.getType() == ContestType.KILL_ENTITY) {
 				

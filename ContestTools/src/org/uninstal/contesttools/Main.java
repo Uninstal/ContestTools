@@ -35,7 +35,7 @@ public class Main extends JavaPlugin {
 			
 			
 			if(!Values.CONTESTS.containsKey(contest.getString("contest.type"))) {
-				Messenger.console("&cType \"" + type + "\" is no longer functioning, "
+				Messenger.console("[Data] &cType \"" + type + "\" is no longer functioning, "
 						+ "the contest has been canceled.");
 			}
 			
@@ -51,7 +51,7 @@ public class Main extends JavaPlugin {
 		if(Contest.isRunning()) {
 			
 			YamlConfiguration contest = new YamlConfiguration();
-			contest.set("contest.type", Contest.getOptions().getId());
+			contest.set("contest.id", Contest.getOptions().getId());
 			contest.set("contest.time", Contest.getTime());
 			
 			files.createFile("contest", contest);

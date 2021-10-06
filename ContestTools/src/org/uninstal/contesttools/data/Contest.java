@@ -1,5 +1,6 @@
 package org.uninstal.contesttools.data;
 
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.uninstal.contesttools.Main;
@@ -27,8 +28,24 @@ public class Contest {
 		return currentContest;
 	}
 	
-	public static boolean start(ContestOptions options) {
+	public static boolean start(ContestOptions options, boolean notification) {
 		if(isRunning()) return false;
+		
+		if(notification) {
+			
+			String message = Values.CONTEST_NOTIFICATION;
+			message = message.replace("<name>", options.getName());
+			message = message.replace("<time>", String.valueOf(options.getDuration()));
+			message = message.replace("<desc>", options.getDescription());
+			Messenger.announce(message);
+			
+			task = Bukkit.getScheduler().runTaskLaterAsynchronously
+			(Main.getInstance(), 
+					() -> Contest.start(options, false), 
+					20 /* this time */);
+			
+			return true;
+		}
 		
 		String message = Values.CONTEST_START;
 		message = message.replace("<name>", options.getName());
