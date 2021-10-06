@@ -10,7 +10,6 @@ import org.uninstal.contesttools.data.ContestType;
 
 public class TypeMineBlocks extends ContestOptions {
 	
-	private Set<Material> blocks;
 	private Map<Material, Integer> scores;
 
 	public TypeMineBlocks(String id, String name, 
@@ -18,30 +17,29 @@ public class TypeMineBlocks extends ContestOptions {
 			Map<Material, Integer> scores) {
 		
 		super(id, name, description, ContestType.MINE_BLOCKS, duration);
-		this.blocks = scores.keySet();
 		this.scores = scores;
 	}
 	
 	public Set<Material> getTargetBlocks() {
-		return blocks;
+		return scores.keySet();
 	}
 	
 	@Override
 	public boolean checkTarget(Object target) {
 		
 		if(target instanceof Material) {
-			return blocks.contains(target);
+			return scores.containsKey(target);
 		}
 		
 		if(target instanceof Block) {
-			return blocks.contains(((Block) target).getType());
+			return scores.containsKey(((Block) target).getType());
 		}
 		
 		return false;
 	}
 	
 	@Override
-	public int scoreFor(Object target) {
+	public int scoreOf(Object target) {
 		
 		if(scores != null && checkTarget(target)) {
 			return scores.get(material(target));

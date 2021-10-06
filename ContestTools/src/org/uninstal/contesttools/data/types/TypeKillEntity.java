@@ -10,7 +10,6 @@ import org.uninstal.contesttools.data.ContestType;
 
 public class TypeKillEntity extends ContestOptions {
 
-	private Set<EntityType> entities;
 	private Map<EntityType, Integer> scores;
 
 	public TypeKillEntity(String id, String name, 
@@ -18,30 +17,29 @@ public class TypeKillEntity extends ContestOptions {
 			Map<EntityType, Integer> scores) {
 		
 		super(id, name, description, ContestType.KILL_ENTITY, duration);
-		this.entities = scores.keySet();
 		this.scores = scores;
 	}
 	
 	public Set<EntityType> getTargetEntities() {
-		return entities;
+		return scores.keySet();
 	}
 
 	@Override
 	public boolean checkTarget(Object target) {
 		
 		if(target instanceof EntityType) {
-			return entities.contains(target);
+			return scores.containsKey(target);
 		}
 		
 		if(target instanceof Entity) {
-			return entities.contains(((Entity) target).getType());
+			return scores.containsKey(((Entity) target).getType());
 		}
 		
 		return false;
 	}
 
 	@Override
-	public int scoreFor(Object target) {
+	public int scoreOf(Object target) {
 		
 		if(scores != null && checkTarget(target)) {
 			return scores.get(entity(target));

@@ -28,6 +28,16 @@ public class Contest {
 		return currentContest;
 	}
 	
+	public static boolean restart(ContestOptions options, 
+		ContestPlayersData playersData, 
+		int time, boolean notification) {
+		if(isRunning()) return false;
+		
+		
+		
+		return true;
+	}
+	
 	public static boolean start(ContestOptions options, boolean notification) {
 		if(isRunning()) return false;
 		
@@ -84,6 +94,10 @@ public class Contest {
 	
 	public static int getTime() {
 		return time;
+	}
+	
+	public static void setTime(int time) {
+		Contest.time = time;
 	}
 	
 	public static int getRemainingTime() {

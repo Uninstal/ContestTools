@@ -26,7 +26,7 @@ public class Handler implements Listener {
 				
 				if(options.checkTarget(block)) {
 					
-					int score = options.scoreFor(block);
+					int score = options.scoreOf(block);
 					Contest.getPlayersData().reward(player, score);
 					return;
 				}
@@ -47,7 +47,7 @@ public class Handler implements Listener {
 				
 				if(killer != null && options.checkTarget(entity)) {
 					
-					int score = options.scoreFor(entity);
+					int score = options.scoreOf(entity);
 					Contest.getPlayersData().reward(killer, score);
 					return;
 				}

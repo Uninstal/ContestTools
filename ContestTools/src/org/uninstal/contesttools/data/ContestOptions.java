@@ -17,7 +17,7 @@ public abstract class ContestOptions {
 	}
 	
 	public abstract boolean checkTarget(Object target);
-	public abstract int scoreFor(Object target);
+	public abstract int scoreOf(Object target);
 	
 	public String getId() {
 		return id;

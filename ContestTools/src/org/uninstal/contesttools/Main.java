@@ -32,14 +32,15 @@ public class Main extends JavaPlugin {
 		if(contest != null) {
 			
 			String type = contest.getString("contest.type");
-			
+			int time = contest.getInt("contest.time");
 			
 			if(!Values.CONTESTS.containsKey(contest.getString("contest.type"))) {
-				Messenger.console("[Data] &cType \"" + type + "\" is no longer functioning, "
+				Messenger.console("[ContestTools] &cType \"" + type + "\" is no longer functioning, "
 						+ "the contest has been canceled.");
 			}
 			
 			else {
+				
 				
 			}
 		}
