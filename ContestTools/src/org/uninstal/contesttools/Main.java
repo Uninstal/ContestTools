@@ -3,12 +3,14 @@ package org.uninstal.contesttools;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.uninstal.contesttools.commands.ContestCommand;
 import org.uninstal.contesttools.data.Contest;
+import org.uninstal.contesttools.data.ContestOptions;
 import org.uninstal.contesttools.data.ContestPlayersData;
 import org.uninstal.contesttools.util.Messenger;
 import org.uninstal.contesttools.util.Values;
@@ -25,8 +27,9 @@ public class Main extends JavaPlugin {
 		instance = this;
 		files = new Files(this);
 		
+		// Registering and reading files.
 		YamlConfiguration config = files.registerNewFile("config");
-		YamlConfiguration contest = files.load("contest", false);
+		YamlConfiguration contest = files.load("contest", true);
 		Values.setConfig(config);
 		Values.read();
 		
@@ -34,24 +37,41 @@ public class Main extends JavaPlugin {
 		if(contest != null && Values.CONTEST_RESTART_ENABLE) {
 			
 			try {
-				
-				String type = contest.getString("contest.type");
+				String id = contest.getString("contest.id");
 				int time = contest.getInt("contest.time");
 				
-				if(!Values.CONTESTS.containsKey(contest.getString("contest.type"))) {
-					Messenger.console("[ContestTools] &cType \"" + type + "\" is no longer functioning, "
+				if(!Values.CONTESTS.containsKey(id)) {
+					Messenger.console("[ContestTools] &cType \"" + id + "\" is no longer functioning, "
 							+ "the contest has been canceled.");
 				}
 				
 				else {
 					
+					ContestPlayersData data = new ContestPlayersData();
+					if(Values.CONTEST_SAVE_PROGRESS && contest.contains("contest.data")) {
+						
+						for(String player : contest
+							.getConfigurationSection("contest.data")
+							.getKeys(false)) {
+							
+							int value = contest.getInt("contest.data." + player);
+							data.setValue(player, value);
+							continue;
+						}
+					}
 					
+					ContestOptions options = Values.CONTESTS.get(id);
+					Contest.restart(options, data, time);
 				}
 				
 			} catch(Exception e) {
 				Messenger.console("§cBad contest.yml file, ignore it.");
+				files.getFile("contest").delete();
 			}
 		}
+		
+		// Registering handler.
+		Bukkit.getPluginManager().registerEvents(new Handler(), this);
 	}
 	
 	@Override

@@ -36,14 +36,14 @@ public class Contest {
 	}
 	
 	public static boolean restart(ContestOptions options, 
-		ContestPlayersData playersData, int time, boolean delayed) {
+		ContestPlayersData playersData, int time) {
 		if(isRunning()) return false;
 		
-		if(delayed) {
+		if(Values.CONTEST_RESTART_DELAY != 0) {
 			
 			task = Bukkit.getScheduler().runTaskLaterAsynchronously
 				(Main.getInstance(), 
-					() -> restart(options, playersData, time, false), 
+					() -> restart(options, playersData, time), 
 					Values.CONTEST_RESTART_DELAY * 20);
 			
 			return true;

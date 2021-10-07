@@ -1,0 +1,36 @@
+# All contests.
+contests:
+  # Any ID.
+  test:
+    
+    # Type of the contest.
+    # All available types:
+    # - mine_blocks
+    # - kill_entity
+    # - earn_money
+    type: mine_blocks
+    
+    # Options of the contest.
+    options:
+      # Name of the contest.
+      name: '&bDiamond time!'
+      # Desciption of the contest.
+      desc: |-
+        &7At this time, you will need to extract a
+        &7s much diamond ore as possible. For each ore you 
+        &7will receive &c10&7 points. In the end, whoever has 
+        &7the most of these points wins. &aGood luck!
+      # Duration of the contest.
+      # You need to specify in seconds.
+      duration: 1200
+      
+    # Targets of the contest.
+    # There are different goals for each contest.
+    # For example, for mine_blocks it is necessary 
+    # to dig up certain blocks. For this type, you will 
+    # need to specify the ID of the blocks for which 
+    # points will be given.
+    targets:
+      # Example:
+      # <ID>: <points>
+      DIAMOND_ORE: 10
