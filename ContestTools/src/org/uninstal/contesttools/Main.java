@@ -1,6 +1,7 @@
 package org.uninstal.contesttools;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -8,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.uninstal.contesttools.commands.ContestCommand;
 import org.uninstal.contesttools.data.Contest;
+import org.uninstal.contesttools.data.ContestPlayersData;
 import org.uninstal.contesttools.util.Messenger;
 import org.uninstal.contesttools.util.Values;
 
@@ -28,20 +30,26 @@ public class Main extends JavaPlugin {
 		Values.setConfig(config);
 		Values.read();
 		
-		//If exists contest data-file.
-		if(contest != null) {
+		// If exists contest data-file.
+		if(contest != null && Values.CONTEST_RESTART_ENABLE) {
 			
-			String type = contest.getString("contest.type");
-			int time = contest.getInt("contest.time");
-			
-			if(!Values.CONTESTS.containsKey(contest.getString("contest.type"))) {
-				Messenger.console("[ContestTools] &cType \"" + type + "\" is no longer functioning, "
-						+ "the contest has been canceled.");
-			}
-			
-			else {
+			try {
 				
+				String type = contest.getString("contest.type");
+				int time = contest.getInt("contest.time");
 				
+				if(!Values.CONTESTS.containsKey(contest.getString("contest.type"))) {
+					Messenger.console("[ContestTools] &cType \"" + type + "\" is no longer functioning, "
+							+ "the contest has been canceled.");
+				}
+				
+				else {
+					
+					
+				}
+				
+			} catch(Exception e) {
+				Messenger.console("§cBad contest.yml file, ignore it.");
 			}
 		}
 	}
@@ -49,11 +57,26 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		
-		if(Contest.isRunning()) {
+		if(Contest.isRunning() && Values.CONTEST_RESTART_ENABLE) {
 			
 			YamlConfiguration contest = new YamlConfiguration();
 			contest.set("contest.id", Contest.getOptions().getId());
 			contest.set("contest.time", Contest.getTime());
+			
+			if(Values.CONTEST_SAVE_PROGRESS) {
+				
+				ContestPlayersData data = Contest.getPlayersData();
+				Map<String, Integer> map = data.get();
+				
+				for(Entry<String, Integer> set : map.entrySet()) {
+					
+					String player = set.getKey();
+					int value = set.getValue();
+					
+					contest.set("contest.data." + player, value);
+					continue;
+				}
+			}
 			
 			files.createFile("contest", contest);
 			return;

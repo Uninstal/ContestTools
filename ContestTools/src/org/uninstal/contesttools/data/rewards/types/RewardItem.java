@@ -21,8 +21,8 @@ public class RewardItem extends ContestReward {
 		
 		PlayerInventory inventory = player.getInventory();
 		
-		//Checking for an empty slot in the inventory to see 
-		//if it is possible to give the item to the player.
+		// Checking for an empty slot in the inventory to see 
+		// if it is possible to give the item to the player.
 		if(!inventory.contains(Material.AIR)) {
 			
 			Location playerLocation = player.getLocation();

@@ -2,6 +2,7 @@ package org.uninstal.contesttools.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 
 import org.bukkit.Material;
@@ -10,6 +11,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 
 public class Utils {
+	
+	private static Random random = new Random();
+	
+	public static int random(int start, int end) {
+		return random.nextInt(end) + start;
+	}
 	
 	public static Material ofMaterial(String index) {
 		

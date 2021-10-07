@@ -7,6 +7,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.uninstal.contesttools.data.ContestOptions;
 import org.uninstal.contesttools.data.ContestType;
+import org.uninstal.contesttools.data.rewards.ContestRewards;
 
 public class TypeKillEntity extends ContestOptions {
 
@@ -14,9 +15,13 @@ public class TypeKillEntity extends ContestOptions {
 
 	public TypeKillEntity(String id, String name, 
 			String description, int duration, 
-			Map<EntityType, Integer> scores) {
+			Map<EntityType, Integer> scores,
+			ContestRewards rewards) {
 		
-		super(id, name, description, ContestType.KILL_ENTITY, duration);
+		super(id, name, description, 
+			ContestType.KILL_ENTITY, duration, 
+			rewards);
+		
 		this.scores = scores;
 	}
 	
@@ -25,24 +30,26 @@ public class TypeKillEntity extends ContestOptions {
 	}
 
 	@Override
-	public boolean checkTarget(Object target) {
+	public boolean checkTarget(Object... target) {
+		Object type = target[0];
 		
-		if(target instanceof EntityType) {
-			return scores.containsKey(target);
+		if(type instanceof EntityType) {
+			return scores.containsKey(type);
 		}
 		
-		if(target instanceof Entity) {
-			return scores.containsKey(((Entity) target).getType());
+		if(type instanceof Entity) {
+			return scores.containsKey(((Entity) type).getType());
 		}
 		
 		return false;
 	}
 
 	@Override
-	public int scoreOf(Object target) {
+	public int scoreOf(Object... target) {
+		Object type = target[0];
 		
-		if(scores != null && checkTarget(target)) {
-			return scores.get(entity(target));
+		if(scores != null && checkTarget(type)) {
+			return scores.get(entity(type));
 		}
 		
 		return 1;

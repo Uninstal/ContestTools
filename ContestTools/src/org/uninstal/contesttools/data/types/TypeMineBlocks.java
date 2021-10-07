@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.uninstal.contesttools.data.ContestOptions;
 import org.uninstal.contesttools.data.ContestType;
+import org.uninstal.contesttools.data.rewards.ContestRewards;
 
 public class TypeMineBlocks extends ContestOptions {
 	
@@ -14,9 +15,13 @@ public class TypeMineBlocks extends ContestOptions {
 
 	public TypeMineBlocks(String id, String name, 
 			String description, int duration, 
-			Map<Material, Integer> scores) {
+			Map<Material, Integer> scores,
+			ContestRewards rewards) {
 		
-		super(id, name, description, ContestType.MINE_BLOCKS, duration);
+		super(id, name, description, 
+			ContestType.MINE_BLOCKS, duration, 
+			rewards);
+		
 		this.scores = scores;
 	}
 	
@@ -25,24 +30,26 @@ public class TypeMineBlocks extends ContestOptions {
 	}
 	
 	@Override
-	public boolean checkTarget(Object target) {
+	public boolean checkTarget(Object... target) {
+		Object type = target[0];
 		
-		if(target instanceof Material) {
-			return scores.containsKey(target);
+		if(type instanceof Material) {
+			return scores.containsKey(type);
 		}
 		
-		if(target instanceof Block) {
-			return scores.containsKey(((Block) target).getType());
+		if(type instanceof Block) {
+			return scores.containsKey(((Block) type).getType());
 		}
 		
 		return false;
 	}
 	
 	@Override
-	public int scoreOf(Object target) {
+	public int scoreOf(Object... target) {
+		Object material = target[0];
 		
-		if(scores != null && checkTarget(target)) {
-			return scores.get(material(target));
+		if(scores != null && checkTarget(material)) {
+			return scores.get(material(material));
 		}
 		
 		return 1;

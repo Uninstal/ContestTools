@@ -26,6 +26,14 @@ public class ContestPlayersData {
 		put(player.getName(), value);
 	}
 	
+	public void setValue(String player, int value) {
+		this.players.put(player, value);
+	}
+	
+	public void setValue(Player player, int value) {
+		this.players.put(player.getName(), value);
+	}
+	
 	public String getFirstPlace() {
 		String player = new String();
 		

@@ -37,30 +37,34 @@ public class Values {
 			
 			String name = config.getString(path + ".options.name");
 			String desc = config.getString(path + ".options.desc");
-			int duration = config.getInt(path + ".options.desc", 12000);
+			int duration = config.getInt(path + ".options.duration", 12000);
 			
 			ContestOptions options = null;
 			
 			if(type == ContestType.MINE_BLOCKS) {
 
-				Map<Material, Integer> scores = Utils.map(config, path + ".targets", 
+				Map<Material, Integer> scores = Utils.map(
+					config, path + ".targets", 
 					k -> Utils.ofMaterial(k), 
 					v -> Integer.valueOf(v));
 				
 				options = new TypeMineBlocks(
 					id, name, desc, 
-					duration, scores);
+					duration, scores,
+					null); // Temporarily.
 			}
 			
 			if(type == ContestType.KILL_ENTITY) {
 				
-				Map<EntityType, Integer> scores = Utils.map(config, path + ".targets", 
+				Map<EntityType, Integer> scores = Utils.map(
+					config, path + ".targets", 
 					k -> Utils.ofEntity(k), 
 					v -> Integer.valueOf(v));
 				
 				options = new TypeKillEntity(
 					id, name, desc, 
-					duration, scores);
+					duration, scores,
+					null); // Temporarily.
 			}
 			
 			Values.CONTESTS.put(id, options);
@@ -70,10 +74,20 @@ public class Values {
 		}
 	}
 	
+	// All types of contests and their settings.
 	public static Map<String, ContestOptions> CONTESTS;
 	
+	// Values of command messages.
 	public static String COMMAND_HELP;
+	
+	// The values of the messages about the beginning/end of the contest.
 	public static String CONTEST_NOTIFICATION;
 	public static String CONTEST_START;
 	public static String CONTEST_END;
+	
+	// Values of restart contest.
+	public static boolean CONTEST_RESTART_ENABLE;
+	public static boolean CONTEST_SAVE_PROGRESS;
+	public static int CONTEST_RESTART_DELAY;
+	public static String CONTEST_RESTART;
 }

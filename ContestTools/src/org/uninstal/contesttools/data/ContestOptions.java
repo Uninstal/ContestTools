@@ -1,5 +1,7 @@
 package org.uninstal.contesttools.data;
 
+import org.uninstal.contesttools.data.rewards.ContestRewards;
+
 public abstract class ContestOptions {
 	
 	private ContestType type;
@@ -7,17 +9,21 @@ public abstract class ContestOptions {
 	private String id;
 	private String name;
 	private String description;
+	private ContestRewards rewards;
 	
-	public ContestOptions(String id, String name, String description, ContestType type, int duration) {
+	public ContestOptions(String id, String name, String description, 
+		ContestType type, int duration, ContestRewards rewards) {
+		
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.duration = duration;
+		this.rewards = rewards;
 		this.type = type;
 	}
 	
-	public abstract boolean checkTarget(Object target);
-	public abstract int scoreOf(Object target);
+	public abstract boolean checkTarget(Object... target);
+	public abstract int scoreOf(Object... target);
 	
 	public String getId() {
 		return id;
@@ -37,5 +43,9 @@ public abstract class ContestOptions {
 	
 	public ContestType getType() {
 		return type;
+	}
+	
+	public ContestRewards getRewards() {
+		return rewards;
 	}
 }

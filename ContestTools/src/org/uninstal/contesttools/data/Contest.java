@@ -1,9 +1,16 @@
 package org.uninstal.contesttools.data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.uninstal.contesttools.Main;
+import org.uninstal.contesttools.data.rewards.ContestReward;
+import org.uninstal.contesttools.data.rewards.ContestRewards;
+import org.uninstal.contesttools.util.Economy;
 import org.uninstal.contesttools.util.Messenger;
 import org.uninstal.contesttools.util.Values;
 
@@ -29,12 +36,30 @@ public class Contest {
 	}
 	
 	public static boolean restart(ContestOptions options, 
-		ContestPlayersData playersData, 
-		int time, boolean notification) {
+		ContestPlayersData playersData, int time, boolean delayed) {
 		if(isRunning()) return false;
 		
+		if(delayed) {
+			
+			task = Bukkit.getScheduler().runTaskLaterAsynchronously
+				(Main.getInstance(), 
+					() -> restart(options, playersData, time, false), 
+					Values.CONTEST_RESTART_DELAY * 20);
+			
+			return true;
+		}
 		
+		String message = Values.CONTEST_RESTART;
+		message = message.replace("<name>", options.getName());
+		message = message.replace("<time>", String.valueOf(options.getDuration()));
+		message = message.replace("<desc>", options.getDescription());
+		Messenger.announce(message);
 		
+		Contest.currentContest = options;
+		Contest.data = playersData;
+		Contest.time = time;
+		
+		runContestTask();
 		return true;
 	}
 	
@@ -65,20 +90,59 @@ public class Contest {
 		
 		running = true;
 		currentContest = options;
-		data = new ContestPlayersData();
+		if(data == null)
+			data = new ContestPlayersData();
+		
+		runContestTask();
+		return true;
+	}
+	
+	private static void runContestTask() {
 		
 		task = new BukkitRunnable() {
+			
+			private Map<String, Integer> balances = new HashMap<>();
 			
 			@Override
 			public void run() {
 				
+				// For the balance contest.
 				if(currentContest.getType() == ContestType.EARN_MONEY) {
-					//Code with temp data (TemporaryData class).
+					
+					for(Player player : Bukkit.getOnlinePlayers()) {
+						String name = player.getName();
+						int cur = Economy.getMoney(player);
+						
+						if(!balances.containsKey(name)) {
+							balances.put(name, Economy.getMoney(player));
+							continue;
+						}
+						
+						else {
+							
+							int old = balances.get(name);
+							int reward = currentContest.scoreOf(old, cur);
+							
+							if(reward != 0)
+								data.setValue(player, reward);
+							continue;
+						}
+					}
 				}
 				
-				if(time == options.getDuration()) {
+				if(time >= currentContest.getDuration()) {
 					
-					//Rewards and other...
+					ContestRewards rewards = currentContest.getRewards();
+					String winner = data.getFirstPlace();
+					Player player = Bukkit.getPlayer(winner);
+					
+					if(player == null) {
+						// I think...
+						return;
+					}
+					
+					ContestReward reward = rewards.random();
+					reward.transfer(player);
 					
 					end();
 					return;
@@ -89,7 +153,6 @@ public class Contest {
 			}
 			
 		}.runTaskTimerAsynchronously(Main.getInstance(), 20, 20);
-		return true;
 	}
 	
 	public static int getTime() {
@@ -110,5 +173,6 @@ public class Contest {
 		running = false;
 		data = null;
 		currentContest = null;
+		time = 0;
 	}
 }
