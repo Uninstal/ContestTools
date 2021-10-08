@@ -136,13 +136,11 @@ public class Contest {
 					String winner = data.getFirstPlace();
 					Player player = Bukkit.getPlayer(winner);
 					
-					if(player == null) {
-						// I think...
-						return;
+					if(player != null) {
+						
+						ContestReward reward = rewards.random();
+						reward.transfer(player);
 					}
-					
-					ContestReward reward = rewards.random();
-					reward.transfer(player);
 					
 					end();
 					return;
@@ -157,10 +155,6 @@ public class Contest {
 	
 	public static int getTime() {
 		return time;
-	}
-	
-	public static void setTime(int time) {
-		Contest.time = time;
 	}
 	
 	public static int getRemainingTime() {

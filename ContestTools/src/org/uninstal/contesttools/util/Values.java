@@ -1,12 +1,20 @@
 package org.uninstal.contesttools.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
 import org.uninstal.contesttools.data.ContestOptions;
 import org.uninstal.contesttools.data.ContestType;
+import org.uninstal.contesttools.data.rewards.ContestReward;
+import org.uninstal.contesttools.data.rewards.ContestRewards;
+import org.uninstal.contesttools.data.rewards.types.RewardCommand;
+import org.uninstal.contesttools.data.rewards.types.RewardItem;
+import org.uninstal.contesttools.data.rewards.types.RewardType;
 import org.uninstal.contesttools.data.types.TypeKillEntity;
 import org.uninstal.contesttools.data.types.TypeMineBlocks;
 
@@ -19,6 +27,7 @@ public class Values {
 	}
 
 	public static void read() {
+		long start = System.currentTimeMillis();
 		
 		// Read all the contests from config.
 		for(String id : config.getConfigurationSection("contests")
@@ -38,6 +47,36 @@ public class Values {
 			String name = config.getString(path + ".options.name");
 			String desc = config.getString(path + ".options.desc");
 			int duration = config.getInt(path + ".options.duration", 12000);
+			List<ContestReward> rewards = new ArrayList<>();
+			
+			// Rewards load.
+			for(String rewardId : config.getConfigurationSection(path + ".rewards")
+				.getKeys(false)) {
+				String path2 = path + ".rewards." + rewardId;
+				
+				String rewardName = config.getString(path2 + ".name");
+				String reward = config.getString(path2 + ".type");
+				int chance = config.getInt(path2 + ".chance");
+				List<String> rewardValues = config.getStringList(path2 + ".values");
+				RewardType rewardType = RewardType.of(reward);
+				
+				ContestReward r = null;
+				
+				if(rewardType == RewardType.COMMAND)
+					r = new RewardCommand(rewardName, chance, rewardValues);
+				
+				else if(rewardType == RewardType.ITEM) {
+					
+					List<ItemStack> items = Utils
+						.transformCollect(rewardValues,
+						(t) -> Utils.ofItemStack(t));
+					
+					r = new RewardItem(rewardName, chance, items);
+				}
+				
+				rewards.add(r);
+				continue;
+			}
 			
 			ContestOptions options = null;
 			
@@ -51,10 +90,10 @@ public class Values {
 				options = new TypeMineBlocks(
 					id, name, desc, 
 					duration, scores,
-					null); // Temporarily.
+					new ContestRewards(rewards));
 			}
 			
-			if(type == ContestType.KILL_ENTITY) {
+			else if(type == ContestType.KILL_ENTITY) {
 				
 				Map<EntityType, Integer> scores = Utils.map(
 					config, path + ".targets", 
@@ -64,7 +103,7 @@ public class Values {
 				options = new TypeKillEntity(
 					id, name, desc, 
 					duration, scores,
-					null); // Temporarily.
+					new ContestRewards(rewards));
 			}
 			
 			Values.CONTESTS.put(id, options);
@@ -72,6 +111,9 @@ public class Values {
 			
 			continue;
 		}
+		
+		Messenger.console("Config read in " + 
+		(System.currentTimeMillis() - start) + "ms.");
 	}
 	
 	// All types of contests and their settings.

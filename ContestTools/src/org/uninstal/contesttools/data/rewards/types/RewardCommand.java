@@ -11,7 +11,7 @@ public class RewardCommand extends ContestReward {
 	private List<String> commands;
 
 	public RewardCommand(String name, int chance, List<String> commands) {
-		super(name, chance, commands);
+		super(RewardType.COMMAND, name, chance, commands);
 		this.commands = commands;
 	}
 	

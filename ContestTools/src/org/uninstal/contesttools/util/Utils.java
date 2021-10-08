@@ -1,6 +1,8 @@
 package org.uninstal.contesttools.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
@@ -9,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
 
 public class Utils {
 	
@@ -16,6 +19,10 @@ public class Utils {
 	
 	public static int random(int start, int end) {
 		return random.nextInt(end) + start;
+	}
+	
+	public static ItemStack ofItemStack(String index) {
+		return null;
 	}
 	
 	public static Material ofMaterial(String index) {
@@ -32,11 +39,31 @@ public class Utils {
 		return entityType;
 	}
 	
+	public static <T, K> List<T> transformCollect(List<K> list, Function<K, T> func){
+		List<T> newList = new ArrayList<>();
+		
+		for(K param : list) {
+			T value = func.apply(param);
+			
+			if(value == null) { // Zero-value protection.
+				
+				Messenger.console("§c[ContestTools] Param '" + param + "' is incorrect.");
+				Messenger.console("§c[ContestTools] It won't be uploaded...");
+				continue;
+			}
+			
+			newList.add(value);
+			continue;
+		}
+		
+		return newList;
+	}
+	
 	// The hashmap collector from the config section, 
 	// which converts the data from there to the necessary.
 	public static <T, V> Map<T, V> map(YamlConfiguration config, String path, 
-		Function<String, ? extends T> keys,
-		Function<String, ? extends V> values) {
+		Function<String, T> keys,
+		Function<String, V> values) {
 		
 		Map<T, V> map = new HashMap<>();
 		ConfigurationSection cs = config.getConfigurationSection(path);
@@ -47,7 +74,7 @@ public class Utils {
 			T key = keys.apply(param);
 			if(key == null) { // Zero-key protection.
 				
-				Messenger.console("§c[ContestTools] Param '" + param + "' is non-existent.");
+				Messenger.console("§c[ContestTools] Param '" + param + "' is incorrect.");
 				Messenger.console("§c[ContestTools] It won't be uploaded...");
 				continue;
 			}

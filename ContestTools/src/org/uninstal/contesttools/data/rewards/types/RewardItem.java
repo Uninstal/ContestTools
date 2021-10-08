@@ -1,5 +1,7 @@
 package org.uninstal.contesttools.data.rewards.types;
 
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,11 +11,11 @@ import org.uninstal.contesttools.data.rewards.ContestReward;
 
 public class RewardItem extends ContestReward {
 	
-	private ItemStack reward;
+	private List<ItemStack> rewards;
 
-	public RewardItem(String name, int chance, ItemStack reward) {
-		super(name, chance, reward);
-		this.reward = reward;
+	public RewardItem(String name, int chance, List<ItemStack> items) {
+		super(RewardType.ITEM, name, chance, items);
+		this.rewards = items;
 	}
 	
 	@Override
@@ -21,16 +23,19 @@ public class RewardItem extends ContestReward {
 		
 		PlayerInventory inventory = player.getInventory();
 		
-		// Checking for an empty slot in the inventory to see 
-		// if it is possible to give the item to the player.
-		if(!inventory.contains(Material.AIR)) {
+		for(ItemStack reward : this.rewards) {
 			
-			Location playerLocation = player.getLocation();
-			playerLocation.getWorld().dropItem(playerLocation, reward);
-			return;
+			// Checking for an empty slot in the inventory to see 
+			// if it is possible to give the item to the player.
+			if(!inventory.contains(Material.AIR)) {
+				
+				Location playerLocation = player.getLocation();
+				playerLocation.getWorld().dropItem(playerLocation, reward);
+				return;
+			}
+			
+			inventory.addItem(reward);
 		}
-		
-		inventory.addItem(reward);
 		return;
 	}
 }

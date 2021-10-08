@@ -1,7 +1,7 @@
 # All contests.
 contests:
   # Any ID.
-  test:
+  test1:
     
     # Type of the contest.
     # All available types:
@@ -34,3 +34,36 @@ contests:
       # Example:
       # <ID>: <points>
       DIAMOND_ORE: 10
+    
+    # All the rewards.
+    rewards:
+      # Any ID.
+      money:
+        # Name of the reward.
+        name: '&a1000&3$'
+        # Type of the reward.
+        # All available types:
+        # - item
+        # - command
+        type: command
+        # Values that depend on 
+        # the type of reward.
+        # API:
+        # <player> - nickname of the player.
+        values:
+          - 'eco give <player> 1000'
+        # A chance to receive this reward.
+        # Specify from 1 to 100 %.
+        chance: 50
+      money2:
+        name: '&a10000&3$'
+        type: command
+        values:
+          - 'eco give <player> 10000'
+        chance: 25
+      money3:
+        name: '&a100000&3$'
+        type: command
+        values:
+          - 'eco give <player> 100000'
+        chance: 5
