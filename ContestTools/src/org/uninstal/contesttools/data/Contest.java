@@ -10,6 +10,8 @@ import org.bukkit.scheduler.BukkitTask;
 import org.uninstal.contesttools.Main;
 import org.uninstal.contesttools.data.rewards.ContestReward;
 import org.uninstal.contesttools.data.rewards.ContestRewards;
+import org.uninstal.contesttools.events.ContestEndEvent;
+import org.uninstal.contesttools.events.ContestStartEvent;
 import org.uninstal.contesttools.util.Economy;
 import org.uninstal.contesttools.util.Messenger;
 import org.uninstal.contesttools.util.Values;
@@ -59,6 +61,9 @@ public class Contest {
 		Contest.data = playersData;
 		Contest.time = time;
 		
+		ContestStartEvent event = new ContestStartEvent(options, true);
+		Bukkit.getPluginManager().callEvent(event);
+		
 		runContestTask();
 		return true;
 	}
@@ -90,8 +95,10 @@ public class Contest {
 		
 		running = true;
 		currentContest = options;
-		if(data == null)
-			data = new ContestPlayersData();
+		data = new ContestPlayersData();
+		
+		ContestStartEvent event = new ContestStartEvent(options, false);
+		Bukkit.getPluginManager().callEvent(event);
 		
 		runContestTask();
 		return true;
@@ -107,7 +114,7 @@ public class Contest {
 			public void run() {
 				
 				// For the balance contest.
-				if(currentContest.getType() == ContestType.EARN_MONEY) {
+				if(currentContest.getType() == ContestType.EARN) {
 					
 					for(Player player : Bukkit.getOnlinePlayers()) {
 						String name = player.getName();
@@ -135,12 +142,13 @@ public class Contest {
 					ContestRewards rewards = currentContest.getRewards();
 					String winner = data.getFirstPlace();
 					Player player = Bukkit.getPlayer(winner);
+					ContestReward reward = rewards.random();
 					
-					if(player != null) {
-						
-						ContestReward reward = rewards.random();
+					if(player != null) 
 						reward.transfer(player);
-					}
+					
+					ContestEndEvent event = new ContestEndEvent(currentContest, winner, reward);
+					Bukkit.getPluginManager().callEvent(event);
 					
 					end();
 					return;

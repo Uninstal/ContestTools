@@ -14,10 +14,18 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.uninstal.contesttools.data.Contest;
 import org.uninstal.contesttools.data.ContestOptions;
 import org.uninstal.contesttools.data.ContestType;
+import org.uninstal.contesttools.events.ContestEndEvent;
 
 public class Handler implements Listener {
 	
 	private static List<Object> memory = new ArrayList<>();
+	
+	@EventHandler // for to clear memory list
+	public void onContestEnd(ContestEndEvent e) {
+		memory.clear();
+		return;
+	}
+	
 	
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
@@ -25,7 +33,7 @@ public class Handler implements Listener {
 		if(Contest.isRunning()) {
 			ContestOptions options = Contest.getOptions();
 			
-			if(options.getType() == ContestType.MINE_BLOCKS) {
+			if(options.getType() == ContestType.MINE) {
 				
 				Player player = e.getPlayer();
 				Block block = e.getBlock();
@@ -60,7 +68,7 @@ public class Handler implements Listener {
 		if(Contest.isRunning()) {
 			ContestOptions options = Contest.getOptions();
 			
-			if(options.getType() == ContestType.KILL_ENTITY) {
+			if(options.getType() == ContestType.KILL) {
 				
 				LivingEntity entity = e.getEntity();
 				Player killer = entity.getKiller();

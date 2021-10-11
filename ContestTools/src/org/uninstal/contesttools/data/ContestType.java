@@ -2,9 +2,9 @@ package org.uninstal.contesttools.data;
 
 public enum ContestType {
 
-	MINE_BLOCKS("mine_blocks"), 
-	EARN_MONEY("earn_money"), 
-	KILL_ENTITY("kill_entity");
+	MINE("mine"), 
+	EARN("earn"), 
+	KILL("kill");
 	
 	private String name;
 

@@ -8,7 +8,7 @@ contests:
     # - mine_blocks
     # - kill_entity
     # - earn_money
-    type: mine_blocks
+    type: mine
     
     # Options of the contest.
     options:

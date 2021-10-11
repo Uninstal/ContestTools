@@ -9,17 +9,17 @@ import org.uninstal.contesttools.data.ContestOptions;
 import org.uninstal.contesttools.data.ContestType;
 import org.uninstal.contesttools.data.rewards.ContestRewards;
 
-public class TypeKillEntity extends ContestOptions {
+public class TypeKill extends ContestOptions {
 
 	private Map<EntityType, Integer> scores;
 
-	public TypeKillEntity(String id, String name, 
+	public TypeKill(String id, String name, 
 			String description, int duration, 
 			Map<EntityType, Integer> scores,
 			ContestRewards rewards) {
 		
 		super(id, name, description, 
-			ContestType.KILL_ENTITY, duration, 
+			ContestType.KILL, duration, 
 			rewards);
 		
 		this.scores = scores;

@@ -9,17 +9,17 @@ import org.uninstal.contesttools.data.ContestOptions;
 import org.uninstal.contesttools.data.ContestType;
 import org.uninstal.contesttools.data.rewards.ContestRewards;
 
-public class TypeMineBlocks extends ContestOptions {
+public class TypeMine extends ContestOptions {
 	
 	private Map<Material, Integer> scores;
 
-	public TypeMineBlocks(String id, String name, 
+	public TypeMine(String id, String name, 
 			String description, int duration, 
 			Map<Material, Integer> scores,
 			ContestRewards rewards) {
 		
 		super(id, name, description, 
-			ContestType.MINE_BLOCKS, duration, 
+			ContestType.MINE, duration, 
 			rewards);
 		
 		this.scores = scores;

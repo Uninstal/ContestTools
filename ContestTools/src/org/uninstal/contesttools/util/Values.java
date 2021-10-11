@@ -15,8 +15,8 @@ import org.uninstal.contesttools.data.rewards.ContestRewards;
 import org.uninstal.contesttools.data.rewards.types.RewardCommand;
 import org.uninstal.contesttools.data.rewards.types.RewardItem;
 import org.uninstal.contesttools.data.rewards.types.RewardType;
-import org.uninstal.contesttools.data.types.TypeKillEntity;
-import org.uninstal.contesttools.data.types.TypeMineBlocks;
+import org.uninstal.contesttools.data.types.TypeKill;
+import org.uninstal.contesttools.data.types.TypeMine;
 
 public class Values {
 	
@@ -80,27 +80,27 @@ public class Values {
 			
 			ContestOptions options = null;
 			
-			if(type == ContestType.MINE_BLOCKS) {
+			if(type == ContestType.MINE) {
 
 				Map<Material, Integer> scores = Utils.map(
 					config, path + ".targets", 
 					k -> Utils.ofMaterial(k), 
 					v -> Integer.valueOf(v));
 				
-				options = new TypeMineBlocks(
+				options = new TypeMine(
 					id, name, desc, 
 					duration, scores,
 					new ContestRewards(rewards));
 			}
 			
-			else if(type == ContestType.KILL_ENTITY) {
+			else if(type == ContestType.KILL) {
 				
 				Map<EntityType, Integer> scores = Utils.map(
 					config, path + ".targets", 
 					k -> Utils.ofEntity(k), 
 					v -> Integer.valueOf(v));
 				
-				options = new TypeKillEntity(
+				options = new TypeKill(
 					id, name, desc, 
 					duration, scores,
 					new ContestRewards(rewards));
