@@ -15,6 +15,7 @@ import org.uninstal.contesttools.data.rewards.ContestRewards;
 import org.uninstal.contesttools.data.rewards.types.RewardCommand;
 import org.uninstal.contesttools.data.rewards.types.RewardItem;
 import org.uninstal.contesttools.data.rewards.types.RewardType;
+import org.uninstal.contesttools.data.types.TypeEarn;
 import org.uninstal.contesttools.data.types.TypeKill;
 import org.uninstal.contesttools.data.types.TypeMine;
 
@@ -103,6 +104,15 @@ public class Values {
 				options = new TypeKill(
 					id, name, desc, 
 					duration, scores,
+					new ContestRewards(rewards));
+			}
+			
+			else if(type == ContestType.EARN) {
+				int cost = config.getInt(path + ".cost");
+				
+				options = new TypeEarn(
+					id, name, desc, 
+					duration, cost, 
 					new ContestRewards(rewards));
 			}
 			

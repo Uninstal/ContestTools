@@ -1,8 +1,5 @@
 package org.uninstal.contesttools.data;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -108,8 +105,6 @@ public class Contest {
 		
 		task = new BukkitRunnable() {
 			
-			private Map<String, Integer> balances = new HashMap<>();
-			
 			@Override
 			public void run() {
 				
@@ -117,23 +112,12 @@ public class Contest {
 				if(currentContest.getType() == ContestType.EARN) {
 					
 					for(Player player : Bukkit.getOnlinePlayers()) {
-						String name = player.getName();
 						int cur = Economy.getMoney(player);
+						int reward = currentContest.scoreOf(cur);
 						
-						if(!balances.containsKey(name)) {
-							balances.put(name, Economy.getMoney(player));
-							continue;
-						}
-						
-						else {
-							
-							int old = balances.get(name);
-							int reward = currentContest.scoreOf(old, cur);
-							
-							if(reward != 0)
-								data.setValue(player, reward);
-							continue;
-						}
+						if(reward != 0)
+							data.setValue(player, reward);
+						continue;
 					}
 				}
 				
@@ -146,6 +130,12 @@ public class Contest {
 					
 					if(player != null) 
 						reward.transfer(player);
+					
+					String message = Values.CONTEST_END;
+					message = message.replace("<name>", currentContest.getName());
+					message = message.replace("<reward>", reward.getName());
+					message = message.replace("<winner>", winner);
+					Messenger.announce(message);
 					
 					ContestEndEvent event = new ContestEndEvent(currentContest, winner, reward);
 					Bukkit.getPluginManager().callEvent(event);
